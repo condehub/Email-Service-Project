@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cafeteria - Fila de Pedidos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --coffee-dark: #3E2723;
+            --coffee-medium: #5D4037;
+            --coffee-light: #D7CCC8;
+            --caramel: #D4A373;
+            --cream: #FEFAE0;
+            --white: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--cream);
+            color: var(--coffee-dark);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(212, 163, 115, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(93, 64, 55, 0.1) 0%, transparent 40%);
+            padding: 2rem;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--white);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            box-shadow: 0 20px 40px rgba(62, 39, 35, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Borda superior decorativa */
+        .app-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--caramel), var(--coffee-medium));
+        }
+
+        .header-title {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .header-title i {
+            font-size: 2.8rem;
+            color: var(--caramel);
+            margin-bottom: 1rem;
+        }
+
+        .header-title h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--coffee-dark);
+            letter-spacing: -0.5px;
+        }
+
+        .header-title p {
+            font-size: 0.95rem;
+            color: #795548;
+            margin-top: 0.5rem;
+        }
+
+        .order-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--coffee-medium);
+        }
+
+        /* Mantive a classe que você criou no seu HTML original */
+        .query-input {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            padding-left: 3.2rem;
+            font-size: 1.05rem;
+            border: 2px solid var(--coffee-light);
+            border-radius: 12px;
+            background-color: #FAFAFA;
+            color: var(--coffee-dark);
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .query-input:focus {
+            border-color: var(--caramel);
+            box-shadow: 0 0 0 4px rgba(212, 163, 115, 0.15);
+            background-color: var(--white);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 1.2rem;
+            top: 2.45rem;
+            color: var(--caramel);
+            font-size: 1.1rem;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--coffee-medium);
+            color: var(--cream);
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            box-shadow: 0 4px 12px rgba(93, 64, 55, 0.2);
+        }
+
+        .btn-submit:hover {
+            background-color: var(--coffee-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(93, 64, 55, 0.3);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .queue-container {
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 1px dashed var(--coffee-light);
+        }
+
+        .queue-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--coffee-medium);
+        }
+
+        /* Estrutura pronta para receber o seu JavaScript */
+        .queue-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        /* Classes de exemplo para os itens que seu JS irá gerar */
+        .queue-item {
+            background: var(--cream);
+            border-left: 4px solid var(--caramel);
+            padding: 1rem;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            transition: transform 0.2s ease;
+        }
+
+        .queue-item:hover {
+            transform: translateX(4px);
+        }
+        
+        .empty-queue {
+            text-align: center;
+            color: var(--coffee-light);
+            font-size: 0.95rem;
+            padding: 1rem 0;
+            font-style: italic;
+        }
+
+        /* Layout em Duas Colunas */
+        .split-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .split-layout {
+                grid-template-columns: 1fr 1fr;
+                gap: 3rem;
+                align-items: stretch;
+            }
+            .queue-container {
+                margin-top: 0;
+                padding-top: 0;
+                border-top: none;
+                border-left: 1px dashed var(--coffee-light);
+                padding-left: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="header-title">
+            <i class="fas fa-coffee"></i>
+            <h1>Fila da Cafeteria</h1>
+            <p>Adicione pedidos à fila de preparo</p>
+        </header>
+
+        <div class="split-layout">
+            <section class="order-section">
+                <div class="input-group">
+                    <label for="orderInput">Qual o pedido?</label>
+                    <i class="fas fa-mug-hot input-icon"></i>
+                    <input type="text" id="orderInput" class="query-input" placeholder="Ex: Cappuccino Duplo...">
+                </div>
+                
+                <!-- Botão com ID pronto para você adicionar seu evento no JS -->
+                <button type="button" class="btn-submit" id="addOrderBtn">
+                    <i class="fas fa-plus-circle"></i>
+                    Adicionar à Fila
+                </button>
+            </section>
+
+            <!-- Container da fila onde seu JS pode injetar os pedidos -->
+            <section class="queue-container">
+                <h2 class="queue-title">
+                    <i class="fas fa-list-ol"></i> Fila Atual
+                </h2>
+                <div class="queue-list" id="queueList">
+                    <div class="empty-queue" id="emptyState">
+                        Nenhum pedido na fila no momento.
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    <script src="promises.js"></script>
+</body>
+</html>
